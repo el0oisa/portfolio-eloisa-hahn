@@ -220,7 +220,7 @@ function CategoriesPanel() {
       color,
       sort_order: (categories?.length ?? 0) + 1,
     });
-    if (error) return toast.error(error.message);
+    if (error) { toast.error(error.message); return; }
     setName("");
     await qc.invalidateQueries({ queryKey: ["categories"] });
     toast.success("Categoria criada.");
@@ -228,7 +228,7 @@ function CategoriesPanel() {
 
   async function remove(id: string) {
     const { error } = await supabase.from("categories").delete().eq("id", id);
-    if (error) return toast.error(error.message);
+    if (error) { toast.error(error.message); return; }
     await qc.invalidateQueries({ queryKey: ["categories"] });
   }
 
@@ -284,7 +284,7 @@ function ProjectsPanel() {
       sort_order: (projects?.length ?? 0) + 1,
       published: false,
     });
-    if (error) return toast.error(error.message);
+    if (error) { toast.error(error.message); return; }
     setTitle("");
     await qc.invalidateQueries({ queryKey: ["projects"] });
     toast.success("Projeto criado como rascunho.");
@@ -292,13 +292,13 @@ function ProjectsPanel() {
 
   async function togglePublished(id: string, published: boolean) {
     const { error } = await supabase.from("projects").update({ published }).eq("id", id);
-    if (error) return toast.error(error.message);
+    if (error) { toast.error(error.message); return; }
     await qc.invalidateQueries({ queryKey: ["projects"] });
   }
 
   async function remove(id: string) {
     const { error } = await supabase.from("projects").delete().eq("id", id);
-    if (error) return toast.error(error.message);
+    if (error) { toast.error(error.message); return; }
     await qc.invalidateQueries({ queryKey: ["projects"] });
   }
 
@@ -368,7 +368,7 @@ function LinksPanel() {
       .from("portfolio_settings")
       .update({ email, whatsapp: whats })
       .eq("id", settings.id);
-    if (error) return toast.error(error.message);
+    if (error) { toast.error(error.message); return; }
     await qc.invalidateQueries({ queryKey: ["settings"] });
     toast.success("Contato atualizado.");
   }
@@ -397,7 +397,7 @@ function LinksPanel() {
     const { error } = await supabase
       .from("social_links")
       .insert({ label, url, sort_order: (links?.length ?? 0) + 1 });
-    if (error) return toast.error(error.message);
+    if (error) { toast.error(error.message); return; }
     setLabel("");
     setUrl("");
     await qc.invalidateQueries({ queryKey: ["social_links"] });
@@ -405,7 +405,7 @@ function LinksPanel() {
 
   async function removeLink(id: string) {
     const { error } = await supabase.from("social_links").delete().eq("id", id);
-    if (error) return toast.error(error.message);
+    if (error) { toast.error(error.message); return; }
     await qc.invalidateQueries({ queryKey: ["social_links"] });
   }
 
