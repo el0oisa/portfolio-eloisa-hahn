@@ -280,10 +280,20 @@ function BlockRow({
   }
 
   async function move(dir: -1 | 1) {
-    const { error } = await supabase
-      .from("project_blocks")
-      .update({ sort_order: block.sort_order + dir * 1.5 })
-      .eq("id", block.id);
+    const neighbor = siblings[index + dir];
+    if (!neighbor) return;
+    const [a, b] = [
+      supabase
+        .from("project_blocks")
+        .update({ sort_order: neighbor.sort_order })
+        .eq("id", block.id),
+      supabase
+        .from("project_blocks")
+        .update({ sort_order: block.sort_order })
+        .eq("id", neighbor.id),
+    ];
+    const [r1, r2] = await Promise.all([a, b]);
+    const error = r1.error ?? r2.error;
     if (error) {
       toast.error(error.message);
       return;
