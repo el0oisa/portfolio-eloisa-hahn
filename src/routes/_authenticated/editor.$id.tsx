@@ -237,14 +237,23 @@ function BlocksEditor({ projectId, blocks }: { projectId: string; blocks: Block[
 
       <ul className="space-y-4">
         {blocks.map((b, i) => (
-          <BlockRow key={b.id} block={b} index={i} total={blocks.length} />
+          <BlockRow key={b.id} block={b} index={i} siblings={blocks} />
         ))}
       </ul>
     </section>
   );
 }
 
-function BlockRow({ block, index, total }: { block: Block; index: number; total: number }) {
+function BlockRow({
+  block,
+  index,
+  siblings,
+}: {
+  block: Block;
+  index: number;
+  siblings: Block[];
+}) {
+  const total = siblings.length;
   const qc = useQueryClient();
   const [local, setLocal] = useState(block);
   const [busy, setBusy] = useState(false);
