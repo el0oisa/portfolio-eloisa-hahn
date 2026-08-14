@@ -49,7 +49,13 @@ export function DesignSystemPanel() {
   async function save() {
     if (!settings) return;
     setSaving(true);
-    const { error } = await supabase.from("portfolio_settings").update(form).eq("id", settings.id);
+    const payload = Object.fromEntries(
+      Object.entries(form).filter(([, v]) => typeof v === "string" && v),
+    ) as Record<string, string>;
+    const { error } = await supabase
+      .from("portfolio_settings")
+      .update(payload)
+      .eq("id", settings.id);
     setSaving(false);
     if (error) {
       toast.error(error.message);
