@@ -51,15 +51,25 @@ export type Database = {
           accent_3: string
           avatar_url: string | null
           biography: string
+          border_preset: string
+          copy_overrides: Json
           created_at: string
           email: string
+          grid_preset: string
           id: string
           location: string
+          motion_preset: string
           portfolio_name: string
           presentation: string
+          radius_preset: string
           role_title: string
+          shadow_preset: string
           singleton: boolean
+          spacing_preset: string
           tagline: string
+          theme_preset: string
+          tone_preset: string
+          typography_preset: string
           updated_at: string
           whatsapp: string
         }
@@ -69,15 +79,25 @@ export type Database = {
           accent_3?: string
           avatar_url?: string | null
           biography?: string
+          border_preset?: string
+          copy_overrides?: Json
           created_at?: string
           email?: string
+          grid_preset?: string
           id?: string
           location?: string
+          motion_preset?: string
           portfolio_name?: string
           presentation?: string
+          radius_preset?: string
           role_title?: string
+          shadow_preset?: string
           singleton?: boolean
+          spacing_preset?: string
           tagline?: string
+          theme_preset?: string
+          tone_preset?: string
+          typography_preset?: string
           updated_at?: string
           whatsapp?: string
         }
@@ -87,15 +107,25 @@ export type Database = {
           accent_3?: string
           avatar_url?: string | null
           biography?: string
+          border_preset?: string
+          copy_overrides?: Json
           created_at?: string
           email?: string
+          grid_preset?: string
           id?: string
           location?: string
+          motion_preset?: string
           portfolio_name?: string
           presentation?: string
+          radius_preset?: string
           role_title?: string
+          shadow_preset?: string
           singleton?: boolean
+          spacing_preset?: string
           tagline?: string
+          theme_preset?: string
+          tone_preset?: string
+          typography_preset?: string
           updated_at?: string
           whatsapp?: string
         }
