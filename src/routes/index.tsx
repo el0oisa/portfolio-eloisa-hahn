@@ -1,14 +1,10 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { useQuery } from "@tanstack/react-query";
 import { useState } from "react";
+import { ArrowRight, MessageCircle, Mail, MapPin, Link2 } from "lucide-react";
 import { SiteShell } from "@/components/site/SiteShell";
-import {
-  settingsQuery,
-  categoriesQuery,
-  projectsQuery,
-  linksQuery,
-  whatsappHref,
-} from "@/lib/portfolio";
+import { useSiteConfig } from "@/hooks/useSiteConfig";
+import { categoriesQuery, projectsQuery, linksQuery, whatsappHref } from "@/lib/portfolio";
 
 export const Route = createFileRoute("/")({
   head: () => ({
@@ -30,7 +26,7 @@ export const Route = createFileRoute("/")({
 });
 
 function Home() {
-  const { data: settings } = useQuery(settingsQuery);
+  const { settings, copy } = useSiteConfig();
   const { data: categories } = useQuery(categoriesQuery);
   const { data: projects, isLoading } = useQuery(projectsQuery());
   const { data: links } = useQuery(linksQuery);
@@ -41,29 +37,27 @@ function Home() {
   return (
     <SiteShell>
       {/* HERO */}
-      <section className="relative overflow-hidden border-b-[3px] border-foreground px-4 py-16 sm:py-24">
-        <div className="mx-auto max-w-6xl">
-          <p className="sticker ink-border hard-shadow-sm mb-6 rounded-full bg-secondary px-4 py-1.5 text-xs font-bold uppercase tracking-widest text-secondary-foreground">
+      <section className="relative overflow-hidden border-b-[length:var(--ds-border-width)] border-foreground py-3xl">
+        <div className="ds-container">
+          <p className="sticker ink-border hard-shadow-sm mb-lg inline-block rounded-full bg-secondary px-md py-xs text-fluid-xs font-bold uppercase tracking-widest text-secondary-foreground">
             {settings?.role_title || "Portfólio autoral"}
           </p>
-          <h1 className="pop-in max-w-4xl text-5xl uppercase sm:text-7xl lg:text-8xl">
+          <h1 className="pop-in max-w-4xl text-fluid-4xl uppercase">
             {settings?.portfolio_name ?? "Meu Portfólio"}
           </h1>
-          <p className="mt-6 max-w-2xl text-lg text-muted-foreground sm:text-2xl">
-            {settings?.tagline}
-          </p>
-          <div className="mt-8 flex flex-wrap gap-3">
+          <p className="mt-lg max-w-2xl text-fluid-lg text-muted-foreground">{settings?.tagline}</p>
+          <div className="mt-xl flex flex-wrap gap-sm">
             <a
               href="#projetos"
-              className="ink-border hard-shadow rounded-lg bg-primary px-5 py-3 font-bold text-primary-foreground transition-transform hover:-translate-y-0.5"
+              className="ink-border hard-shadow ds-interactive rounded-lg bg-primary px-lg py-sm font-bold text-primary-foreground"
             >
-              Ver projetos
+              {copy.heroPrimaryCta}
             </a>
             <a
               href="#contato"
-              className="ink-border hard-shadow rounded-lg bg-accent px-5 py-3 font-bold text-accent-foreground transition-transform hover:-translate-y-0.5"
+              className="ink-border hard-shadow ds-interactive rounded-lg bg-accent px-lg py-sm font-bold text-accent-foreground"
             >
-              Falar comigo
+              {copy.heroSecondaryCta}
             </a>
           </div>
         </div>
@@ -74,10 +68,10 @@ function Home() {
       </section>
 
       {/* MARQUEE */}
-      <div className="overflow-hidden border-b-[3px] border-foreground bg-accent py-3 text-accent-foreground">
-        <div className="marquee-track whitespace-nowrap font-display text-xl uppercase">
+      <div className="overflow-hidden border-b-[length:var(--ds-border-width)] border-foreground bg-accent py-sm text-accent-foreground">
+        <div className="marquee-track whitespace-nowrap font-display text-fluid-lg uppercase">
           {Array.from({ length: 8 }).map((_, i) => (
-            <span key={i} className="px-6">
+            <span key={i} className="px-lg">
               {settings?.role_title || "Design autoral"} ✦
             </span>
           ))}
@@ -85,17 +79,13 @@ function Home() {
       </div>
 
       {/* PROJETOS */}
-      <section id="projetos" className="scroll-mt-24 px-4 py-16">
-        <div className="mx-auto max-w-6xl">
-          <h2 className="text-4xl uppercase sm:text-6xl">Projetos</h2>
+      <section id="projetos" className="scroll-mt-24 py-2xl">
+        <div className="ds-container">
+          <h2 className="text-fluid-3xl uppercase">{copy.projectsTitle}</h2>
 
-          <div
-            className="mt-6 flex flex-wrap gap-2"
-            role="group"
-            aria-label="Filtrar projetos por categoria"
-          >
+          <div className="mt-lg flex flex-wrap gap-sm" role="group" aria-label={copy.filterLabel}>
             <FilterChip active={filter === null} onClick={() => setFilter(null)}>
-              Todos
+              {copy.filterAll}
             </FilterChip>
             {(categories ?? []).map((c) => (
               <FilterChip
@@ -110,26 +100,22 @@ function Home() {
           </div>
 
           {isLoading ? (
-            <p className="mt-10 text-muted-foreground">Carregando projetos…</p>
+            <p className="mt-xl text-muted-foreground">{copy.loading}</p>
           ) : list.length === 0 ? (
-            <p className="mt-10 text-muted-foreground">
-              Nenhum projeto publicado ainda. Entre na área administrativa para cadastrar o
-              primeiro.
-            </p>
+            <p className="mt-xl text-muted-foreground">{copy.emptyProjects}</p>
           ) : (
-            <ul className="mt-10 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
-              {list.map((p, i) => {
+            <ul className="ds-grid mt-xl">
+              {list.map((p) => {
                 const cat = categories?.find((c) => c.id === p.category_id);
                 return (
-                  <li key={p.id}>
+                  <li key={p.id} className="ds-grid-offset">
                     <Link
                       to="/projeto/$slug"
                       params={{ slug: p.slug }}
-                      className="ink-border hard-shadow group flex h-full flex-col overflow-hidden rounded-xl bg-card transition-transform hover:-translate-y-1"
-                      style={{ rotate: i % 3 === 1 ? "-0.7deg" : "0.5deg" }}
+                      className="ink-border hard-shadow ds-interactive flex h-full flex-col overflow-hidden rounded-xl bg-card"
                     >
                       <div
-                        className="aspect-[4/3] w-full border-b-[3px] border-foreground bg-muted"
+                        className="ds-card-media w-full border-b-[length:var(--ds-border-width)] border-foreground bg-muted"
                         style={{ backgroundColor: cat?.color ?? undefined }}
                       >
                         {p.cover_url ? (
@@ -141,14 +127,15 @@ function Home() {
                           />
                         ) : null}
                       </div>
-                      <div className="flex flex-1 flex-col gap-2 p-5">
-                        <span className="text-xs font-bold uppercase tracking-widest text-muted-foreground">
+                      <div className="flex flex-1 flex-col gap-xs p-lg">
+                        <span className="text-fluid-xs font-bold uppercase tracking-widest text-muted-foreground">
                           {cat?.name ?? "Projeto"} · {p.year}
                         </span>
-                        <h3 className="text-2xl uppercase">{p.title}</h3>
-                        <p className="text-sm text-muted-foreground">{p.summary}</p>
-                        <span className="mt-auto pt-3 text-sm font-bold text-primary">
-                          Ver projeto →
+                        <h3 className="text-fluid-xl uppercase">{p.title}</h3>
+                        <p className="text-fluid-sm text-muted-foreground">{p.summary}</p>
+                        <span className="mt-auto inline-flex items-center gap-xs pt-sm text-fluid-sm font-bold text-primary">
+                          {copy.cardCta}
+                          <ArrowRight aria-hidden="true" className="h-4 w-4" />
                         </span>
                       </div>
                     </Link>
@@ -161,25 +148,32 @@ function Home() {
       </section>
 
       {/* SOBRE */}
-      <section id="sobre" className="scroll-mt-24 border-y-[3px] border-foreground bg-card px-4 py-16">
-        <div className="mx-auto grid max-w-6xl gap-10 lg:grid-cols-[1.2fr_1fr]">
+      <section
+        id="sobre"
+        className="scroll-mt-24 border-y-[length:var(--ds-border-width)] border-foreground bg-card py-2xl"
+      >
+        <div className="ds-container grid gap-xl lg:grid-cols-[1.2fr_1fr]">
           <div>
-            <h2 className="text-4xl uppercase sm:text-6xl">Sobre</h2>
-            <p className="mt-6 text-xl">{settings?.presentation}</p>
-            <p className="mt-4 whitespace-pre-line text-muted-foreground">{settings?.biography}</p>
+            <h2 className="text-fluid-3xl uppercase">{copy.aboutTitle}</h2>
+            <p className="mt-lg text-fluid-lg">{settings?.presentation}</p>
+            <p className="mt-md whitespace-pre-line text-muted-foreground">{settings?.biography}</p>
           </div>
-          <div className="ink-border hard-shadow h-fit rounded-xl bg-secondary p-6 text-secondary-foreground">
-            <h3 className="text-xl uppercase">Onde me achar</h3>
-            <dl className="mt-4 space-y-3 text-sm">
+          <div className="ink-border hard-shadow h-fit rounded-xl bg-secondary p-lg text-secondary-foreground">
+            <h3 className="text-fluid-lg uppercase">Onde me achar</h3>
+            <dl className="mt-md space-y-sm text-fluid-sm">
               {settings?.location ? (
                 <div>
-                  <dt className="font-bold uppercase tracking-widest">Base</dt>
+                  <dt className="flex items-center gap-xs font-bold uppercase tracking-widest">
+                    <MapPin aria-hidden="true" className="h-4 w-4" /> Base
+                  </dt>
                   <dd>{settings.location}</dd>
                 </div>
               ) : null}
               {settings?.email ? (
                 <div>
-                  <dt className="font-bold uppercase tracking-widest">E-mail</dt>
+                  <dt className="flex items-center gap-xs font-bold uppercase tracking-widest">
+                    <Mail aria-hidden="true" className="h-4 w-4" /> E-mail
+                  </dt>
                   <dd>
                     <a className="underline underline-offset-4" href={`mailto:${settings.email}`}>
                       {settings.email}
@@ -189,8 +183,10 @@ function Home() {
               ) : null}
               {(links ?? []).length > 0 ? (
                 <div>
-                  <dt className="font-bold uppercase tracking-widest">Links</dt>
-                  <dd className="flex flex-wrap gap-3">
+                  <dt className="flex items-center gap-xs font-bold uppercase tracking-widest">
+                    <Link2 aria-hidden="true" className="h-4 w-4" /> Links
+                  </dt>
+                  <dd className="flex flex-wrap gap-sm">
                     {(links ?? []).map((l) => (
                       <a
                         key={l.id}
@@ -211,28 +207,28 @@ function Home() {
       </section>
 
       {/* CONTATO */}
-      <section id="contato" className="scroll-mt-24 px-4 py-20">
-        <div className="mx-auto max-w-6xl">
-          <h2 className="text-4xl uppercase sm:text-6xl">Vamos conversar</h2>
-          <p className="mt-4 max-w-xl text-lg text-muted-foreground">
-            Conta o que você quer criar. Respondo rápido e sem formulário chato.
-          </p>
-          <div className="mt-8 flex flex-wrap gap-3">
+      <section id="contato" className="scroll-mt-24 py-3xl">
+        <div className="ds-container">
+          <h2 className="text-fluid-3xl uppercase">{copy.contactTitle}</h2>
+          <p className="mt-md max-w-xl text-fluid-lg text-muted-foreground">{copy.contactLead}</p>
+          <div className="mt-xl flex flex-wrap gap-sm">
             {settings?.whatsapp ? (
               <a
                 href={whatsappHref(settings.whatsapp)}
                 target="_blank"
                 rel="noreferrer noopener"
-                className="ink-border hard-shadow rounded-lg bg-primary px-5 py-3 font-bold text-primary-foreground"
+                className="ink-border hard-shadow ds-interactive inline-flex items-center gap-xs rounded-lg bg-primary px-lg py-sm font-bold text-primary-foreground"
               >
-                WhatsApp
+                <MessageCircle aria-hidden="true" className="h-5 w-5" />
+                {copy.whatsappCta}
               </a>
             ) : null}
             {settings?.email ? (
               <a
                 href={`mailto:${settings.email}`}
-                className="ink-border hard-shadow rounded-lg bg-background px-5 py-3 font-bold"
+                className="ink-border hard-shadow ds-interactive inline-flex items-center gap-xs rounded-lg bg-background px-lg py-sm font-bold"
               >
+                <Mail aria-hidden="true" className="h-5 w-5" />
                 {settings.email}
               </a>
             ) : null}
@@ -259,11 +255,11 @@ function FilterChip({
       type="button"
       onClick={onClick}
       aria-pressed={active}
-      className="ink-border rounded-full px-4 py-1.5 text-sm font-bold transition-transform hover:-translate-y-0.5"
+      className="ink-border ds-pressable rounded-full px-md py-xs text-fluid-sm font-bold"
       style={{
-        backgroundColor: active ? (color ?? "var(--brand-1)") : "transparent",
-        color: active ? "var(--paper)" : undefined,
-        boxShadow: active ? "var(--shadow-hard-sm)" : undefined,
+        backgroundColor: active ? (color ?? "var(--ds-primary)") : "transparent",
+        color: active ? "var(--ds-background)" : undefined,
+        boxShadow: active ? "var(--ds-shadow-sm)" : undefined,
       }}
     >
       {children}
