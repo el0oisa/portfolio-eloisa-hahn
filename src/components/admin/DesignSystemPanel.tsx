@@ -49,12 +49,23 @@ export function DesignSystemPanel() {
   async function save() {
     if (!settings) return;
     setSaving(true);
-    const payload = Object.fromEntries(
-      Object.entries(form).filter(([, v]) => typeof v === "string" && v),
-    ) as Record<string, string>;
+    const s = (k: keyof DesignConfig, fallback: string) =>
+      typeof form[k] === "string" && form[k] ? (form[k] as string) : fallback;
     const { error } = await supabase
       .from("portfolio_settings")
-      .update(payload)
+      .update({
+        theme_preset: s("theme_preset", "vibrante"),
+        typography_preset: s("typography_preset", "grotesk"),
+        grid_preset: s("grid_preset", "suico"),
+        spacing_preset: s("spacing_preset", "normal"),
+        border_preset: s("border_preset", "marcada"),
+        radius_preset: s("radius_preset", "media"),
+        shadow_preset: s("shadow_preset", "dura"),
+        motion_preset: s("motion_preset", "normal"),
+        accent_1: s("accent_1", "#FF4D6D"),
+        accent_2: s("accent_2", "#FFD400"),
+        accent_3: s("accent_3", "#3D5AFE"),
+      })
       .eq("id", settings.id);
     setSaving(false);
     if (error) {
