@@ -36,6 +36,7 @@ export const Route = createFileRoute("/_authenticated/admin")({
 
 const TABS = [
   { id: "identidade", label: "Identidade" },
+  { id: "design", label: "Design & Voz" },
   { id: "categorias", label: "Categorias" },
   { id: "projetos", label: "Projetos" },
   { id: "links", label: "Links & Contato" },
