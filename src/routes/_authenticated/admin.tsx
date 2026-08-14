@@ -11,6 +11,7 @@ import {
   PrimaryButton,
   inputClass,
 } from "@/components/admin/AdminShell";
+import { DesignSystemPanel } from "@/components/admin/DesignSystemPanel";
 import {
   settingsQuery,
   categoriesQuery,
@@ -86,6 +87,7 @@ function AdminPage() {
       </div>
 
       {tab === "identidade" && <IdentityPanel />}
+      {tab === "design" && <DesignSystemPanel />}
       {tab === "categorias" && <CategoriesPanel />}
       {tab === "projetos" && <ProjectsPanel />}
       {tab === "links" && <LinksPanel />}
