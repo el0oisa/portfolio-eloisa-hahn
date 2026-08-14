@@ -155,13 +155,13 @@
   --font-display: var(--ds-font-display);
   --font-sans: var(--ds-font-body);
 
-  --spacing-xs: var(--ds-space-xs);
-  --spacing-sm: var(--ds-space-sm);
-  --spacing-md: var(--ds-space-md);
-  --spacing-lg: var(--ds-space-lg);
-  --spacing-xl: var(--ds-space-xl);
-  --spacing-2xl: var(--ds-space-2xl);
-  --spacing-3xl: var(--ds-space-3xl);
+  --spacing-ds-xs: var(--ds-space-xs);
+  --spacing-ds-sm: var(--ds-space-sm);
+  --spacing-ds-md: var(--ds-space-md);
+  --spacing-ds-lg: var(--ds-space-lg);
+  --spacing-ds-xl: var(--ds-space-xl);
+  --spacing-ds-2xl: var(--ds-space-2xl);
+  --spacing-ds-3xl: var(--ds-space-3xl);
 
   --text-fluid-xs: var(--ds-text-xs);
   --text-fluid-sm: var(--ds-text-sm);

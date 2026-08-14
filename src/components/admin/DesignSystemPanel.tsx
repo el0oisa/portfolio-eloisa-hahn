@@ -77,8 +77,8 @@ export function DesignSystemPanel() {
   }
 
   return (
-    <div className="space-y-lg">
-      <section className="ink-border hard-shadow space-y-lg rounded-xl bg-background p-lg">
+    <div className="space-y-ds-lg">
+      <section className="ink-border hard-shadow space-y-ds-lg rounded-xl bg-background p-ds-lg">
         <div>
           <h2 className="text-fluid-xl uppercase">Design system</h2>
           <p className="text-fluid-sm text-muted-foreground">
@@ -91,18 +91,18 @@ export function DesignSystemPanel() {
           const group = PRESET_GROUPS[groupId];
           const current = (form[group.key as keyof DesignConfig] as string) ?? group.presets[0]!.id;
           return (
-            <fieldset key={groupId} className="ink-border rounded-lg p-md">
-              <legend className="px-xs text-fluid-xs font-bold uppercase tracking-widest">
+            <fieldset key={groupId} className="ink-border rounded-lg p-ds-md">
+              <legend className="px-ds-xs text-fluid-xs font-bold uppercase tracking-widest">
                 {group.label}
               </legend>
-              <div className="grid gap-sm sm:grid-cols-2 lg:grid-cols-3">
+              <div className="grid gap-ds-sm sm:grid-cols-2 lg:grid-cols-3">
                 {group.presets.map((p) => (
                   <button
                     key={p.id}
                     type="button"
                     aria-pressed={current === p.id}
                     onClick={() => setForm((f) => ({ ...f, [group.key]: p.id }))}
-                    className={`ink-border ds-interactive rounded-lg p-sm text-left ${
+                    className={`ink-border ds-interactive rounded-lg p-ds-sm text-left ${
                       current === p.id ? "hard-shadow-sm bg-secondary text-secondary-foreground" : "bg-card"
                     }`}
                   >
@@ -117,14 +117,14 @@ export function DesignSystemPanel() {
           );
         })}
 
-        <fieldset className="ink-border rounded-lg p-md">
-          <legend className="px-xs text-fluid-xs font-bold uppercase tracking-widest">
+        <fieldset className="ink-border rounded-lg p-ds-md">
+          <legend className="px-ds-xs text-fluid-xs font-bold uppercase tracking-widest">
             Acentos personalizados
           </legend>
-          <p className="mb-sm text-fluid-xs text-muted-foreground">
+          <p className="mb-ds-sm text-fluid-xs text-muted-foreground">
             Opcional: sobrescrevem as cores primária, secundária e de acento da paleta escolhida.
           </p>
-          <div className="grid gap-md sm:grid-cols-3">
+          <div className="grid gap-ds-md sm:grid-cols-3">
             {(["accent_1", "accent_2", "accent_3"] as const).map((k, i) => (
               <Field key={k} label={["Primária", "Secundária", "Acento"][i]!}>
                 <input
@@ -183,7 +183,7 @@ function VoicePanel() {
   const groups = [...new Set(COPY_FIELDS.map((f) => f.group))];
 
   return (
-    <section className="ink-border hard-shadow space-y-lg rounded-xl bg-background p-lg">
+    <section className="ink-border hard-shadow space-y-ds-lg rounded-xl bg-background p-ds-lg">
       <div>
         <h2 className="text-fluid-xl uppercase">Tom de voz</h2>
         <p className="text-fluid-sm text-muted-foreground">
@@ -191,14 +191,14 @@ function VoicePanel() {
         </p>
       </div>
 
-      <div className="grid gap-sm sm:grid-cols-2 lg:grid-cols-3">
+      <div className="grid gap-ds-sm sm:grid-cols-2 lg:grid-cols-3">
         {TONES.map((t) => (
           <button
             key={t.id}
             type="button"
             aria-pressed={toneId === t.id}
             onClick={() => setToneId(t.id)}
-            className={`ink-border ds-interactive rounded-lg p-sm text-left ${
+            className={`ink-border ds-interactive rounded-lg p-ds-sm text-left ${
               toneId === t.id ? "hard-shadow-sm bg-secondary text-secondary-foreground" : "bg-card"
             }`}
           >
@@ -209,9 +209,9 @@ function VoicePanel() {
       </div>
 
       {groups.map((g) => (
-        <fieldset key={g} className="ink-border rounded-lg p-md">
-          <legend className="px-xs text-fluid-xs font-bold uppercase tracking-widest">{g}</legend>
-          <div className="grid gap-md sm:grid-cols-2">
+        <fieldset key={g} className="ink-border rounded-lg p-ds-md">
+          <legend className="px-ds-xs text-fluid-xs font-bold uppercase tracking-widest">{g}</legend>
+          <div className="grid gap-ds-md sm:grid-cols-2">
             {COPY_FIELDS.filter((f) => f.group === g).map((f) => (
               <Field key={f.key} label={f.label}>
                 <input

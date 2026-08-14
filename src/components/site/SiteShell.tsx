@@ -21,12 +21,12 @@ export function SiteShell({ children }: { children: ReactNode }) {
       <header className="sticky top-0 z-40 border-b-[length:var(--ds-border-width)] border-foreground bg-background/95 backdrop-blur">
         <nav
           aria-label="Navegação principal"
-          className="ds-container flex flex-wrap items-center gap-x-md gap-y-sm py-sm"
+          className="ds-container flex flex-wrap items-center gap-x-ds-md gap-y-ds-sm py-ds-sm"
         >
           <Link to="/" className="font-display text-fluid-lg uppercase tracking-tight">
             {name}
           </Link>
-          <ul className="ml-auto flex flex-wrap items-center gap-sm text-fluid-sm font-medium">
+          <ul className="ml-auto flex flex-wrap items-center gap-ds-sm text-fluid-sm font-medium">
             <li>
               <Link to="/" hash="projetos" className="ds-interactive inline-block hover:text-primary">
                 {copy.navProjects}
@@ -46,7 +46,7 @@ export function SiteShell({ children }: { children: ReactNode }) {
               {isAdmin ? (
                 <Link
                   to="/admin"
-                  className="ink-border hard-shadow-sm ds-interactive inline-block rounded-md bg-secondary px-sm py-xs font-bold text-secondary-foreground"
+                  className="ink-border hard-shadow-sm ds-interactive inline-block rounded-md bg-secondary px-ds-sm py-ds-xs font-bold text-secondary-foreground"
                 >
                   {copy.navAdmin}
                 </Link>
@@ -62,10 +62,10 @@ export function SiteShell({ children }: { children: ReactNode }) {
 
       <main id="conteudo">{children}</main>
 
-      <footer className="mt-3xl border-t-[length:var(--ds-border-width)] border-foreground bg-foreground py-xl text-background">
-        <div className="ds-container flex flex-col gap-md sm:flex-row sm:items-end sm:justify-between">
+      <footer className="mt-ds-3xl border-t-[length:var(--ds-border-width)] border-foreground bg-foreground py-ds-xl text-background">
+        <div className="ds-container flex flex-col gap-ds-md sm:flex-row sm:items-end sm:justify-between">
           <p className="font-display text-fluid-xl uppercase">{name}</p>
-          <ul className="flex flex-wrap gap-md text-fluid-sm">
+          <ul className="flex flex-wrap gap-ds-md text-fluid-sm">
             {(links ?? []).map((l) => (
               <li key={l.id}>
                 <a
