@@ -42,10 +42,10 @@ function Home() {
           <p className="sticker ink-border hard-shadow-sm mb-ds-lg inline-block rounded-full bg-secondary px-ds-md py-ds-xs text-fluid-xs font-bold uppercase tracking-widest text-secondary-foreground">
             {settings?.role_title || "Portfólio autoral"}
           </p>
-          <h1 className="pop-in max-w-4xl text-fluid-4xl uppercase">
+          <h1 className="pop-in max-w-[56rem] text-fluid-4xl uppercase">
             {settings?.portfolio_name ?? "Meu Portfólio"}
           </h1>
-          <p className="mt-ds-lg max-w-2xl text-fluid-lg text-muted-foreground">{settings?.tagline}</p>
+          <p className="mt-ds-lg max-w-[42rem] text-fluid-lg text-muted-foreground">{settings?.tagline}</p>
           <div className="mt-ds-xl flex flex-wrap gap-ds-sm">
             <a
               href="#projetos"
@@ -210,7 +210,7 @@ function Home() {
       <section id="contato" className="scroll-mt-24 py-ds-3xl">
         <div className="ds-container">
           <h2 className="text-fluid-3xl uppercase">{copy.contactTitle}</h2>
-          <p className="mt-ds-md max-w-xl text-fluid-lg text-muted-foreground">{copy.contactLead}</p>
+          <p className="mt-ds-md max-w-[36rem] text-fluid-lg text-muted-foreground">{copy.contactLead}</p>
           <div className="mt-ds-xl flex flex-wrap gap-ds-sm">
             {settings?.whatsapp ? (
               <a
