@@ -5,21 +5,179 @@
 @custom-variant dark (&:is(.dark *));
 
 /*
- * DESIGN SYSTEM — "Portfólio Autoral"
- * Bold, colorful, risograph-inspired. All tokens live here.
- * Accent colors can be overridden at runtime by the admin (inline vars on <html>).
+ * DESIGN SYSTEM AUTORAL
+ * -------------------------------------------------------------
+ * Nenhuma identidade gráfica é definitiva. Toda decisão visual
+ * vive em tokens (--ds-*) que podem ser trocados em runtime pelo
+ * painel administrativo (ver src/lib/design-system.ts).
+ * Os tokens semânticos do shadcn são derivados dos tokens --ds-*.
  */
 
-@theme inline {
-  --radius-sm: calc(var(--radius) - 4px);
-  --radius-md: calc(var(--radius) - 2px);
-  --radius-lg: var(--radius);
-  --radius-xl: calc(var(--radius) + 6px);
-  --radius-2xl: calc(var(--radius) + 14px);
-  --radius-3xl: calc(var(--radius) + 24px);
+/* =============================== TOKENS BASE (preset padrão) */
+:root {
+  /* CORES */
+  --ds-background: oklch(0.97 0.02 95);
+  --ds-surface: oklch(1 0 0);
+  --ds-text-primary: oklch(0.16 0.03 275);
+  --ds-text-secondary: oklch(0.45 0.03 275);
+  --ds-primary: oklch(0.65 0.24 15);
+  --ds-secondary: oklch(0.87 0.18 95);
+  --ds-accent: oklch(0.55 0.22 265);
+  --ds-border: oklch(0.16 0.03 275);
+  --ds-focus: oklch(0.55 0.22 265);
+  --ds-success: oklch(0.62 0.16 150);
+  --ds-warning: oklch(0.78 0.16 85);
+  --ds-error: oklch(0.58 0.24 27);
+  --ds-on-primary: oklch(0.99 0 0);
+  --ds-on-secondary: var(--ds-text-primary);
+  --ds-on-accent: oklch(0.99 0 0);
 
-  --font-display: "Archivo Black", ui-sans-serif, system-ui, sans-serif;
-  --font-sans: "Space Grotesk", ui-sans-serif, system-ui, sans-serif;
+  /* TIPOGRAFIA */
+  --ds-font-display: "Archivo Black", ui-sans-serif, system-ui, sans-serif;
+  --ds-font-body: "Space Grotesk", ui-sans-serif, system-ui, sans-serif;
+  --ds-display-weight: 400;
+  --ds-body-weight: 400;
+  --ds-display-tracking: -0.02em;
+  --ds-body-tracking: 0em;
+  --ds-display-leading: 0.95;
+  --ds-body-leading: 1.6;
+  --ds-scale-ratio: 1.28;
+
+  /* escala tipográfica fluida */
+  --ds-text-xs: clamp(0.72rem, 0.7rem + 0.1vw, 0.78rem);
+  --ds-text-sm: clamp(0.84rem, 0.8rem + 0.15vw, 0.92rem);
+  --ds-text-base: clamp(1rem, 0.96rem + 0.2vw, 1.08rem);
+  --ds-text-lg: clamp(1.15rem, 1.05rem + 0.5vw, 1.35rem);
+  --ds-text-xl: clamp(1.4rem, 1.2rem + 1vw, 1.9rem);
+  --ds-text-2xl: clamp(1.8rem, 1.4rem + 2vw, 2.8rem);
+  --ds-text-3xl: clamp(2.4rem, 1.6rem + 4vw, 4.5rem);
+  --ds-text-4xl: clamp(3rem, 1.8rem + 7vw, 7rem);
+
+  /* ESPAÇAMENTO */
+  --ds-space-xs: 0.25rem;
+  --ds-space-sm: 0.75rem;
+  --ds-space-md: 1rem;
+  --ds-space-lg: 1.5rem;
+  --ds-space-xl: 2.5rem;
+  --ds-space-2xl: 4rem;
+  --ds-space-3xl: 6rem;
+
+  /* GRID */
+  --ds-grid-columns: 3;
+  --ds-grid-max: 72rem;
+  --ds-grid-gutter: var(--ds-space-lg);
+  --ds-grid-margin: var(--ds-space-lg);
+  --ds-grid-offset: 0rem;
+  --ds-card-ratio: 4 / 3;
+
+  /* BORDAS */
+  --ds-border-width: 3px;
+  --ds-border-style: solid;
+
+  /* RAIOS */
+  --ds-radius-base: 0.75rem;
+  --ds-radius-organic: 1rem;
+  --ds-radius-none: 0px;
+  --ds-radius-full: 9999px;
+
+  /* SOMBRAS */
+  --ds-shadow-none: none;
+  --ds-shadow-sm: 3px 3px 0 0 var(--ds-border);
+  --ds-shadow-md: 6px 6px 0 0 var(--ds-border);
+  --ds-shadow-lg: 10px 10px 0 0 var(--ds-border);
+
+  /* MOTION */
+  --ds-motion-fast: 140ms;
+  --ds-motion-normal: 240ms;
+  --ds-motion-slow: 420ms;
+  --ds-motion-delay: 40ms;
+  --ds-motion-ease: cubic-bezier(0.2, 0.9, 0.3, 1.2);
+  --ds-motion-lift: 4px;
+  --ds-motion-scale: 1.03;
+}
+
+/* ================= MAPEAMENTO PARA OS TOKENS SEMÂNTICOS SHADCN */
+:root {
+  --radius: var(--ds-radius-base);
+
+  --ink: var(--ds-border);
+  --paper: var(--ds-background);
+  --brand-1: var(--ds-primary);
+  --brand-2: var(--ds-secondary);
+  --brand-3: var(--ds-accent);
+
+  --background: var(--ds-background);
+  --foreground: var(--ds-text-primary);
+  --card: var(--ds-surface);
+  --card-foreground: var(--ds-text-primary);
+  --popover: var(--ds-surface);
+  --popover-foreground: var(--ds-text-primary);
+  --primary: var(--ds-primary);
+  --primary-foreground: var(--ds-on-primary);
+  --secondary: var(--ds-secondary);
+  --secondary-foreground: var(--ds-on-secondary);
+  --muted: color-mix(in oklab, var(--ds-background) 82%, var(--ds-text-primary) 8%);
+  --muted-foreground: var(--ds-text-secondary);
+  --accent: var(--ds-accent);
+  --accent-foreground: var(--ds-on-accent);
+  --destructive: var(--ds-error);
+  --destructive-foreground: oklch(0.99 0 0);
+  --success: var(--ds-success);
+  --warning: var(--ds-warning);
+  --border: var(--ds-border);
+  --input: color-mix(in oklab, var(--ds-border) 35%, transparent);
+  --ring: var(--ds-focus);
+
+  --sidebar: var(--ds-text-primary);
+  --sidebar-foreground: var(--ds-background);
+  --sidebar-primary: var(--ds-primary);
+  --sidebar-primary-foreground: var(--ds-on-primary);
+  --sidebar-accent: color-mix(in oklab, var(--ds-text-primary) 88%, var(--ds-background));
+  --sidebar-accent-foreground: var(--ds-background);
+  --sidebar-border: color-mix(in oklab, var(--ds-text-primary) 70%, var(--ds-background));
+  --sidebar-ring: var(--ds-focus);
+
+  --shadow-hard: var(--ds-shadow-md);
+  --shadow-hard-sm: var(--ds-shadow-sm);
+  --shadow-soft: var(--ds-shadow-lg);
+}
+
+@theme inline {
+  --radius-none: var(--ds-radius-none);
+  --radius-sm: calc(var(--ds-radius-base) * 0.5);
+  --radius-md: calc(var(--ds-radius-base) * 0.75);
+  --radius-lg: var(--ds-radius-base);
+  --radius-xl: calc(var(--ds-radius-base) * 1.5);
+  --radius-2xl: calc(var(--ds-radius-base) * 2);
+  --radius-3xl: calc(var(--ds-radius-base) * 3);
+  --radius-full: var(--ds-radius-full);
+
+  --font-display: var(--ds-font-display);
+  --font-sans: var(--ds-font-body);
+
+  --spacing-ds-xs: var(--ds-space-xs);
+  --spacing-ds-sm: var(--ds-space-sm);
+  --spacing-ds-md: var(--ds-space-md);
+  --spacing-ds-lg: var(--ds-space-lg);
+  --spacing-ds-xl: var(--ds-space-xl);
+  --spacing-ds-2xl: var(--ds-space-2xl);
+  --spacing-ds-3xl: var(--ds-space-3xl);
+
+  --text-fluid-xs: var(--ds-text-xs);
+  --text-fluid-sm: var(--ds-text-sm);
+  --text-fluid-base: var(--ds-text-base);
+  --text-fluid-lg: var(--ds-text-lg);
+  --text-fluid-xl: var(--ds-text-xl);
+  --text-fluid-2xl: var(--ds-text-2xl);
+  --text-fluid-3xl: var(--ds-text-3xl);
+  --text-fluid-4xl: var(--ds-text-4xl);
+
+  --shadow-none: var(--ds-shadow-none);
+  --shadow-ds-sm: var(--ds-shadow-sm);
+  --shadow-ds-md: var(--ds-shadow-md);
+  --shadow-ds-lg: var(--ds-shadow-lg);
+
+  --ease-ds: var(--ds-motion-ease);
 
   --color-background: var(--background);
   --color-foreground: var(--foreground);
@@ -37,6 +195,8 @@
   --color-accent-foreground: var(--accent-foreground);
   --color-destructive: var(--destructive);
   --color-destructive-foreground: var(--destructive-foreground);
+  --color-success: var(--success);
+  --color-warning: var(--warning);
   --color-border: var(--border);
   --color-input: var(--input);
   --color-ring: var(--ring);
@@ -58,64 +218,12 @@
   --color-sidebar-ring: var(--sidebar-ring);
 }
 
-:root {
-  --radius: 0.5rem;
-
-  /* editable accents (admin can override) */
-  --brand-1: oklch(0.65 0.24 15);
-  --brand-2: oklch(0.87 0.18 95);
-  --brand-3: oklch(0.55 0.22 265);
-
-  --ink: oklch(0.16 0.03 275);
-  --paper: oklch(0.97 0.02 95);
-
-  --background: var(--paper);
-  --foreground: var(--ink);
-  --card: oklch(1 0 0);
-  --card-foreground: var(--ink);
-  --popover: oklch(1 0 0);
-  --popover-foreground: var(--ink);
-  --primary: var(--brand-1);
-  --primary-foreground: oklch(0.99 0 0);
-  --secondary: var(--brand-2);
-  --secondary-foreground: var(--ink);
-  --muted: oklch(0.93 0.02 95);
-  --muted-foreground: oklch(0.45 0.03 275);
-  --accent: var(--brand-3);
-  --accent-foreground: oklch(0.99 0 0);
-  --destructive: oklch(0.58 0.24 27);
-  --destructive-foreground: oklch(0.99 0 0);
-  --border: var(--ink);
-  --input: oklch(0.85 0.02 95);
-  --ring: var(--brand-3);
-
-  --sidebar: var(--ink);
-  --sidebar-foreground: var(--paper);
-  --sidebar-primary: var(--brand-1);
-  --sidebar-primary-foreground: oklch(0.99 0 0);
-  --sidebar-accent: oklch(0.24 0.04 275);
-  --sidebar-accent-foreground: var(--paper);
-  --sidebar-border: oklch(0.3 0.04 275);
-  --sidebar-ring: var(--brand-3);
-
-  --shadow-hard: 6px 6px 0 0 var(--ink);
-  --shadow-hard-sm: 3px 3px 0 0 var(--ink);
-  --shadow-soft: 0 18px 40px -24px color-mix(in oklab, var(--ink) 60%, transparent);
-}
-
 .dark {
-  --background: var(--ink);
-  --foreground: var(--paper);
-  --card: oklch(0.22 0.04 275);
-  --card-foreground: var(--paper);
-  --popover: oklch(0.22 0.04 275);
-  --popover-foreground: var(--paper);
-  --muted: oklch(0.26 0.04 275);
-  --muted-foreground: oklch(0.75 0.03 275);
-  --border: oklch(0.99 0 0 / 25%);
-  --input: oklch(0.99 0 0 / 18%);
-  --shadow-hard: 6px 6px 0 0 var(--brand-2);
-  --shadow-hard-sm: 3px 3px 0 0 var(--brand-2);
+  --ds-background: oklch(0.16 0.03 275);
+  --ds-surface: oklch(0.22 0.04 275);
+  --ds-text-primary: oklch(0.97 0.02 95);
+  --ds-text-secondary: oklch(0.75 0.03 275);
+  --ds-border: oklch(0.99 0 0 / 30%);
 }
 
 @layer base {
@@ -126,39 +234,107 @@
   body {
     background-color: var(--color-background);
     color: var(--color-foreground);
-    font-family: var(--font-sans);
+    font-family: var(--ds-font-body);
+    font-weight: var(--ds-body-weight);
+    font-size: var(--ds-text-base);
+    line-height: var(--ds-body-leading);
+    letter-spacing: var(--ds-body-tracking);
     -webkit-font-smoothing: antialiased;
   }
 
   h1,
   h2,
   h3 {
-    font-family: var(--font-display);
-    letter-spacing: -0.02em;
-    line-height: 0.95;
+    font-family: var(--ds-font-display);
+    font-weight: var(--ds-display-weight);
+    letter-spacing: var(--ds-display-tracking);
+    line-height: var(--ds-display-leading);
   }
 
   ::selection {
-    background: var(--brand-2);
-    color: var(--ink);
+    background: var(--ds-secondary);
+    color: var(--ds-text-primary);
   }
 
   :focus-visible {
-    outline: 3px solid var(--brand-3);
+    outline: 3px solid var(--ds-focus);
     outline-offset: 3px;
   }
 }
 
+/* ============================================ UTILITÁRIOS DO SISTEMA */
+
 @utility hard-shadow {
-  box-shadow: var(--shadow-hard);
+  box-shadow: var(--ds-shadow-md);
 }
 
 @utility hard-shadow-sm {
-  box-shadow: var(--shadow-hard-sm);
+  box-shadow: var(--ds-shadow-sm);
+}
+
+@utility hard-shadow-lg {
+  box-shadow: var(--ds-shadow-lg);
 }
 
 @utility ink-border {
-  border: 3px solid var(--ink);
+  border: var(--ds-border-width) var(--ds-border-style) var(--ds-border);
+}
+
+/* Grid configurável por tokens */
+@utility ds-container {
+  width: 100%;
+  max-width: var(--ds-grid-max);
+  margin-inline: auto;
+  padding-inline: var(--ds-grid-margin);
+}
+
+@utility ds-grid {
+  display: grid;
+  gap: var(--ds-grid-gutter);
+  grid-template-columns: repeat(1, minmax(0, 1fr));
+  @media (width >= 40rem) {
+    grid-template-columns: repeat(min(2, var(--ds-grid-columns)), minmax(0, 1fr));
+  }
+  @media (width >= 64rem) {
+    grid-template-columns: repeat(var(--ds-grid-columns), minmax(0, 1fr));
+  }
+}
+
+/* deslocamento do grid assimétrico — só em telas largas e sem quebrar leitura */
+@utility ds-grid-offset {
+  @media (width >= 64rem) {
+    &:nth-child(3n + 2) {
+      margin-block-start: var(--ds-grid-offset);
+    }
+  }
+}
+
+@utility ds-card-media {
+  aspect-ratio: var(--ds-card-ratio);
+}
+
+@utility ds-interactive {
+  transition:
+    transform var(--ds-motion-normal) var(--ds-motion-ease),
+    box-shadow var(--ds-motion-normal) var(--ds-motion-ease),
+    background-color var(--ds-motion-fast) var(--ds-motion-ease),
+    color var(--ds-motion-fast) var(--ds-motion-ease);
+  &:hover {
+    transform: translateY(calc(var(--ds-motion-lift) * -1));
+  }
+  &:active {
+    transform: translateY(0) scale(0.99);
+  }
+}
+
+@utility ds-pressable {
+  transition: transform var(--ds-motion-fast) var(--ds-motion-ease);
+  &:hover {
+    transform: scale(var(--ds-motion-scale));
+  }
+  &:active {
+    transform: scale(0.98);
+  }
 }
 
 @utility grain {
@@ -194,10 +370,10 @@
   &:focus {
     left: 1rem;
     top: 1rem;
-    background: var(--ink);
-    color: var(--paper);
-    padding: 0.75rem 1rem;
-    border-radius: var(--radius);
+    background: var(--ds-text-primary);
+    color: var(--ds-background);
+    padding: var(--ds-space-sm) var(--ds-space-md);
+    border-radius: var(--ds-radius-base);
   }
 }
 
@@ -213,7 +389,7 @@
 @keyframes pop-in {
   from {
     opacity: 0;
-    transform: translateY(18px) rotate(-1deg);
+    transform: translateY(18px);
   }
   to {
     opacity: 1;
@@ -222,15 +398,30 @@
 }
 
 @utility pop-in {
-  animation: pop-in 0.5s cubic-bezier(0.2, 0.9, 0.3, 1.4) both;
+  animation: pop-in var(--ds-motion-slow) var(--ds-motion-ease) var(--ds-motion-delay) both;
 }
 
+@utility reveal {
+  animation: pop-in var(--ds-motion-normal) var(--ds-motion-ease) both;
+}
+
+/* ======================= ACESSIBILIDADE: REDUÇÃO DE MOVIMENTO */
 @media (prefers-reduced-motion: reduce) {
+  :root {
+    --ds-motion-fast: 0.001ms;
+    --ds-motion-normal: 0.001ms;
+    --ds-motion-slow: 0.001ms;
+    --ds-motion-delay: 0ms;
+    --ds-motion-lift: 0px;
+    --ds-motion-scale: 1;
+  }
+
   *,
   *::before,
   *::after {
     animation-duration: 0.001ms !important;
     animation-iteration-count: 1 !important;
     transition-duration: 0.001ms !important;
+    scroll-behavior: auto !important;
   }
 }

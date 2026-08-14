@@ -11,6 +11,7 @@ import {
   PrimaryButton,
   inputClass,
 } from "@/components/admin/AdminShell";
+import { DesignSystemPanel } from "@/components/admin/DesignSystemPanel";
 import {
   settingsQuery,
   categoriesQuery,
@@ -36,6 +37,7 @@ export const Route = createFileRoute("/_authenticated/admin")({
 
 const TABS = [
   { id: "identidade", label: "Identidade" },
+  { id: "design", label: "Design & Voz" },
   { id: "categorias", label: "Categorias" },
   { id: "projetos", label: "Projetos" },
   { id: "links", label: "Links & Contato" },
@@ -85,6 +87,7 @@ function AdminPage() {
       </div>
 
       {tab === "identidade" && <IdentityPanel />}
+      {tab === "design" && <DesignSystemPanel />}
       {tab === "categorias" && <CategoriesPanel />}
       {tab === "projetos" && <ProjectsPanel />}
       {tab === "links" && <LinksPanel />}
