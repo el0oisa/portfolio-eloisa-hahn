@@ -196,7 +196,7 @@ function VoicePanel() {
           <legend className="px-xs text-fluid-xs font-bold uppercase tracking-widest">{g}</legend>
           <div className="grid gap-md sm:grid-cols-2">
             {COPY_FIELDS.filter((f) => f.group === g).map((f) => (
-              <Field key={f.key} label={f.label} hint={`Padrão do tom: ${resolveCopy(toneId).${""}`.slice(0, 0) || undefined}>
+              <Field key={f.key} label={f.label}>
                 <input
                   className={inputClass}
                   placeholder={resolved[f.key as CopyKey]}
