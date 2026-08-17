@@ -18,7 +18,7 @@ export const Route = createFileRoute("/auth")({
 
 function AuthPage() {
   const navigate = useNavigate();
-  const [mode, setMode] = useState<"signin" | "signup">("signin");
+  const [mode, setMode] = useState<"signin" | "signup" | "forgot">("signin");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [busy, setBusy] = useState(false);
@@ -27,7 +27,14 @@ function AuthPage() {
     e.preventDefault();
     setBusy(true);
     try {
-      if (mode === "signin") {
+      if (mode === "forgot") {
+        const { error } = await supabase.auth.resetPasswordForEmail(email, {
+          redirectTo: `${window.location.origin}/reset-password`,
+        });
+        if (error) throw error;
+        toast.success("Enviamos um link de recuperação para seu e-mail.");
+        setMode("signin");
+      } else if (mode === "signin") {
         const { error } = await supabase.auth.signInWithPassword({ email, password });
         if (error) throw error;
         toast.success("Bem-vindo de volta!");
@@ -53,6 +60,7 @@ function AuthPage() {
     }
   }
 
+
   return (
     <div className="grain flex min-h-screen items-center justify-center bg-background px-4">
       <div className="ink-border hard-shadow w-full max-w-md rounded-2xl bg-card p-8">
@@ -60,10 +68,12 @@ function AuthPage() {
           ← Voltar ao portfólio
         </Link>
         <h1 className="mt-4 text-3xl uppercase">
-          {mode === "signin" ? "Entrar" : "Criar conta"}
+          {mode === "signin" ? "Entrar" : mode === "signup" ? "Criar conta" : "Recuperar senha"}
         </h1>
         <p className="mt-2 text-sm text-muted-foreground">
-          Área exclusiva de edição. Visitantes não precisam de login.
+          {mode === "forgot"
+            ? "Informe o e-mail do administrador e enviaremos um link para criar uma nova senha."
+            : "Área exclusiva de edição. Visitantes não precisam de login."}
         </p>
 
         <form onSubmit={submit} className="mt-6 space-y-4">
@@ -81,37 +91,55 @@ function AuthPage() {
               className="ink-border mt-1 w-full rounded-lg bg-background px-3 py-2"
             />
           </div>
-          <div>
-            <label htmlFor="password" className="text-sm font-bold uppercase tracking-widest">
-              Senha
-            </label>
-            <input
-              id="password"
-              type="password"
-              required
-              minLength={6}
-              autoComplete={mode === "signin" ? "current-password" : "new-password"}
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              className="ink-border mt-1 w-full rounded-lg bg-background px-3 py-2"
-            />
-          </div>
+          {mode !== "forgot" ? (
+            <div>
+              <label htmlFor="password" className="text-sm font-bold uppercase tracking-widest">
+                Senha
+              </label>
+              <input
+                id="password"
+                type="password"
+                required
+                minLength={6}
+                autoComplete={mode === "signin" ? "current-password" : "new-password"}
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                className="ink-border mt-1 w-full rounded-lg bg-background px-3 py-2"
+              />
+            </div>
+          ) : null}
           <button
             type="submit"
             disabled={busy}
             className="ink-border hard-shadow-sm w-full rounded-lg bg-primary px-4 py-3 font-bold text-primary-foreground disabled:opacity-60"
           >
-            {busy ? "Aguarde…" : mode === "signin" ? "Entrar" : "Criar conta"}
+            {busy
+              ? "Aguarde…"
+              : mode === "signin"
+                ? "Entrar"
+                : mode === "signup"
+                  ? "Criar conta"
+                  : "Enviar link de recuperação"}
           </button>
         </form>
 
-        <button
-          type="button"
-          onClick={() => setMode(mode === "signin" ? "signup" : "signin")}
-          className="mt-4 text-sm underline underline-offset-4"
-        >
-          {mode === "signin" ? "Ainda não tenho conta" : "Já tenho conta"}
-        </button>
+        <div className="mt-4 flex flex-wrap gap-4 text-sm">
+          <button
+            type="button"
+            onClick={() => setMode(mode === "signup" ? "signin" : "signup")}
+            className="underline underline-offset-4"
+          >
+            {mode === "signup" ? "Já tenho conta" : "Ainda não tenho conta"}
+          </button>
+          <button
+            type="button"
+            onClick={() => setMode(mode === "forgot" ? "signin" : "forgot")}
+            className="underline underline-offset-4"
+          >
+            {mode === "forgot" ? "Voltar ao login" : "Esqueci minha senha"}
+          </button>
+        </div>
+
       </div>
     </div>
   );
