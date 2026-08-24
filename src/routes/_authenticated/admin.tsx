@@ -100,12 +100,26 @@ function IdentityPanel() {
   const { data } = useQuery(settingsQuery);
   const [form, setForm] = useState<Partial<Settings>>({});
   const [saving, setSaving] = useState(false);
+  const [uploadingAvatar, setUploadingAvatar] = useState(false);
 
   useEffect(() => {
     if (data) setForm(data);
   }, [data]);
 
   const set = (k: keyof Settings, v: string) => setForm((f) => ({ ...f, [k]: v }));
+  async function handleAvatarUpload(file: File) {
+  setUploadingAvatar(true);
+
+  try {
+    const url = await uploadMedia(file, "profile");
+    setForm((f) => ({ ...f, avatar_url: url }));
+    toast.success("Foto carregada. Clique em salvar para confirmar.");
+  } catch (e) {
+    toast.error(e instanceof Error ? e.message : "Erro ao carregar a foto.");
+  } finally {
+    setUploadingAvatar(false);
+  }
+}
 
   async function save() {
     setSaving(true);
@@ -117,6 +131,7 @@ function IdentityPanel() {
         presentation: form.presentation ?? "",
         biography: form.biography ?? "",
         location: form.location ?? "",
+        avatar_url: form.avatar_url ?? null,
         accent_1: form.accent_1 ?? "#FF4D6D",
         accent_2: form.accent_2 ?? "#FFD400",
         accent_3: form.accent_3 ?? "#3D5AFE",
