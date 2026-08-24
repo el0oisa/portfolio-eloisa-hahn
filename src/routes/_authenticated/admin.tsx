@@ -26,9 +26,18 @@ export const Route = createFileRoute("/_authenticated/admin")({
   head: () => ({
     meta: [
       { title: "Painel de edição — Portfólio Autoral" },
-      { name: "description", content: "Edite identidade, categorias, projetos e contatos." },
-      { property: "og:title", content: "Painel de edição — Portfólio Autoral" },
-      { property: "og:description", content: "Edite identidade, categorias, projetos e contatos." },
+      {
+        name: "description",
+        content: "Edite identidade, categorias, projetos e contatos.",
+      },
+      {
+        property: "og:title",
+        content: "Painel de edição — Portfólio Autoral",
+      },
+      {
+        property: "og:description",
+        content: "Edite identidade, categorias, projetos e contatos.",
+      },
       { name: "robots", content: "noindex" },
     ],
   }),
@@ -70,7 +79,11 @@ function AdminPage() {
 
   return (
     <AdminShell title="Edição">
-      <div role="tablist" aria-label="Seções do painel" className="mb-8 flex flex-wrap gap-2">
+      <div
+        role="tablist"
+        aria-label="Seções do painel"
+        className="mb-8 flex flex-wrap gap-2"
+      >
         {TABS.map((t) => (
           <button
             key={t.id}
@@ -78,7 +91,9 @@ function AdminPage() {
             aria-selected={tab === t.id}
             onClick={() => setTab(t.id)}
             className={`ink-border rounded-full px-4 py-1.5 text-sm font-bold ${
-              tab === t.id ? "hard-shadow-sm bg-secondary text-secondary-foreground" : "bg-card"
+              tab === t.id
+                ? "hard-shadow-sm bg-secondary text-secondary-foreground"
+                : "bg-card"
             }`}
           >
             {t.label}
@@ -106,23 +121,28 @@ function IdentityPanel() {
     if (data) setForm(data);
   }, [data]);
 
-  const set = (k: keyof Settings, v: string) => setForm((f) => ({ ...f, [k]: v }));
-  async function handleAvatarUpload(file: File) {
-  setUploadingAvatar(true);
+  const set = (k: keyof Settings, v: string) =>
+    setForm((f) => ({ ...f, [k]: v }));
 
-  try {
-    const url = await uploadMedia(file, "profile");
-    setForm((f) => ({ ...f, avatar_url: url }));
-    toast.success("Foto carregada. Clique em salvar para confirmar.");
-  } catch (e) {
-    toast.error(e instanceof Error ? e.message : "Erro ao carregar a foto.");
-  } finally {
-    setUploadingAvatar(false);
+  async function handleAvatarUpload(file: File) {
+    setUploadingAvatar(true);
+
+    try {
+      const url = await uploadMedia(file, "avatar");
+      setForm((f) => ({ ...f, avatar_url: url }));
+      toast.success("Foto carregada. Clique em salvar para confirmar.");
+    } catch (e) {
+      toast.error(
+        e instanceof Error ? e.message : "Erro ao carregar a foto."
+      );
+    } finally {
+      setUploadingAvatar(false);
+    }
   }
-}
 
   async function save() {
     setSaving(true);
+
     try {
       const payload = {
         portfolio_name: form.portfolio_name ?? "",
@@ -136,10 +156,16 @@ function IdentityPanel() {
         accent_2: form.accent_2 ?? "#FFD400",
         accent_3: form.accent_3 ?? "#3D5AFE",
       };
+
       const { error } = data
-        ? await supabase.from("portfolio_settings").update(payload).eq("id", data.id)
+        ? await supabase
+            .from("portfolio_settings")
+            .update(payload)
+            .eq("id", data.id)
         : await supabase.from("portfolio_settings").insert(payload);
+
       if (error) throw error;
+
       await qc.invalidateQueries({ queryKey: ["settings"] });
       toast.success("Identidade atualizada.");
     } catch (e) {
@@ -152,6 +178,43 @@ function IdentityPanel() {
   return (
     <section className="ink-border hard-shadow space-y-5 rounded-xl bg-background p-6">
       <h2 className="text-2xl uppercase">Identidade & textos</h2>
+
+      <div className="flex flex-col gap-5 sm:flex-row sm:items-center">
+        <div className="ink-border h-32 w-32 shrink-0 overflow-hidden rounded-full bg-muted">
+          {form.avatar_url ? (
+            <img
+              src={form.avatar_url}
+              alt="Foto de perfil"
+              className="h-full w-full object-cover"
+            />
+          ) : (
+            <div className="flex h-full w-full items-center justify-center p-4 text-center text-xs text-muted-foreground">
+              Sem foto de perfil
+            </div>
+          )}
+        </div>
+
+        <div className="flex-1">
+          <Field label="Foto de perfil">
+            <input
+              type="file"
+              accept="image/jpeg,image/png,image/webp"
+              disabled={uploadingAvatar}
+              className="mt-1 block text-sm"
+              onChange={(e) => {
+                const file = e.target.files?.[0];
+                if (file) void handleAvatarUpload(file);
+              }}
+            />
+          </Field>
+
+          <p className="mt-2 text-xs text-muted-foreground">
+            Escolha uma imagem JPG, PNG ou WebP. Depois de carregar, clique em
+            "Salvar identidade".
+          </p>
+        </div>
+      </div>
+
       <div className="grid gap-4 sm:grid-cols-2">
         <Field label="Nome do portfólio">
           <input
@@ -160,6 +223,7 @@ function IdentityPanel() {
             onChange={(e) => set("portfolio_name", e.target.value)}
           />
         </Field>
+
         <Field label="Título / atuação">
           <input
             className={inputClass}
@@ -168,6 +232,7 @@ function IdentityPanel() {
           />
         </Field>
       </div>
+
       <Field label="Frase de impacto">
         <input
           className={inputClass}
@@ -175,6 +240,7 @@ function IdentityPanel() {
           onChange={(e) => set("tagline", e.target.value)}
         />
       </Field>
+
       <Field label="Apresentação">
         <textarea
           rows={3}
@@ -183,6 +249,7 @@ function IdentityPanel() {
           onChange={(e) => set("presentation", e.target.value)}
         />
       </Field>
+
       <Field label="Biografia">
         <textarea
           rows={5}
@@ -191,6 +258,7 @@ function IdentityPanel() {
           onChange={(e) => set("biography", e.target.value)}
         />
       </Field>
+
       <Field label="Localização">
         <input
           className={inputClass}
@@ -203,6 +271,7 @@ function IdentityPanel() {
         <legend className="px-2 text-xs font-bold uppercase tracking-widest">
           Cores do design system
         </legend>
+
         <div className="grid gap-4 sm:grid-cols-3">
           {(["accent_1", "accent_2", "accent_3"] as const).map((k, i) => (
             <Field key={k} label={`Cor ${i + 1}`}>
@@ -217,7 +286,7 @@ function IdentityPanel() {
         </div>
       </fieldset>
 
-      <PrimaryButton onClick={save} disabled={saving}>
+      <PrimaryButton onClick={save} disabled={saving || uploadingAvatar}>
         {saving ? "Salvando…" : "Salvar identidade"}
       </PrimaryButton>
     </section>
@@ -232,31 +301,51 @@ function CategoriesPanel() {
 
   async function add() {
     if (!name.trim()) return;
+
     const { error } = await supabase.from("categories").insert({
       name,
       slug: slugify(name),
       color,
       sort_order: (categories?.length ?? 0) + 1,
     });
-    if (error) { toast.error(error.message); return; }
+
+    if (error) {
+      toast.error(error.message);
+      return;
+    }
+
     setName("");
     await qc.invalidateQueries({ queryKey: ["categories"] });
     toast.success("Categoria criada.");
   }
 
   async function remove(id: string) {
-    const { error } = await supabase.from("categories").delete().eq("id", id);
-    if (error) { toast.error(error.message); return; }
+    const { error } = await supabase
+      .from("categories")
+      .delete()
+      .eq("id", id);
+
+    if (error) {
+      toast.error(error.message);
+      return;
+    }
+
     await qc.invalidateQueries({ queryKey: ["categories"] });
   }
 
   return (
     <section className="ink-border hard-shadow space-y-5 rounded-xl bg-background p-6">
       <h2 className="text-2xl uppercase">Categorias</h2>
+
       <div className="flex flex-wrap items-end gap-3">
         <Field label="Nova categoria">
-          <input className={inputClass} value={name} onChange={(e) => setName(e.target.value)} />
+          <input
+            className={inputClass}
+            value={name}
+            onChange={(e) => setName(e.target.value)}
+          />
         </Field>
+
         <Field label="Cor">
           <input
             type="color"
@@ -265,19 +354,29 @@ function CategoriesPanel() {
             onChange={(e) => setColor(e.target.value)}
           />
         </Field>
+
         <PrimaryButton onClick={add}>Adicionar</PrimaryButton>
       </div>
+
       <ul className="grid gap-3 sm:grid-cols-2">
         {(categories ?? []).map((c) => (
-          <li key={c.id} className="ink-border flex items-center gap-3 rounded-lg bg-card p-3">
+          <li
+            key={c.id}
+            className="ink-border flex items-center gap-3 rounded-lg bg-card p-3"
+          >
             <span
               aria-hidden="true"
               className="ink-border h-6 w-6 rounded-full"
               style={{ backgroundColor: c.color }}
             />
+
             <span className="font-bold">{c.name}</span>
+
             <span className="ml-auto">
-              <GhostButton onClick={() => remove(c.id)} aria-label={`Excluir ${c.name}`}>
+              <GhostButton
+                onClick={() => remove(c.id)}
+                aria-label={`Excluir ${c.name}`}
+              >
                 Excluir
               </GhostButton>
             </span>
@@ -296,37 +395,65 @@ function ProjectsPanel() {
 
   async function create() {
     if (!title.trim()) return;
+
     const { error } = await supabase.from("projects").insert({
       title,
       slug: slugify(title),
       sort_order: (projects?.length ?? 0) + 1,
       published: false,
     });
-    if (error) { toast.error(error.message); return; }
+
+    if (error) {
+      toast.error(error.message);
+      return;
+    }
+
     setTitle("");
     await qc.invalidateQueries({ queryKey: ["projects"] });
     toast.success("Projeto criado como rascunho.");
   }
 
   async function togglePublished(id: string, published: boolean) {
-    const { error } = await supabase.from("projects").update({ published }).eq("id", id);
-    if (error) { toast.error(error.message); return; }
+    const { error } = await supabase
+      .from("projects")
+      .update({ published })
+      .eq("id", id);
+
+    if (error) {
+      toast.error(error.message);
+      return;
+    }
+
     await qc.invalidateQueries({ queryKey: ["projects"] });
   }
 
   async function remove(id: string) {
-    const { error } = await supabase.from("projects").delete().eq("id", id);
-    if (error) { toast.error(error.message); return; }
+    const { error } = await supabase
+      .from("projects")
+      .delete()
+      .eq("id", id);
+
+    if (error) {
+      toast.error(error.message);
+      return;
+    }
+
     await qc.invalidateQueries({ queryKey: ["projects"] });
   }
 
   return (
     <section className="ink-border hard-shadow space-y-5 rounded-xl bg-background p-6">
       <h2 className="text-2xl uppercase">Projetos</h2>
+
       <div className="flex flex-wrap items-end gap-3">
         <Field label="Novo projeto">
-          <input className={inputClass} value={title} onChange={(e) => setTitle(e.target.value)} />
+          <input
+            className={inputClass}
+            value={title}
+            onChange={(e) => setTitle(e.target.value)}
+          />
         </Field>
+
         <PrimaryButton onClick={create}>Criar</PrimaryButton>
       </div>
 
@@ -339,14 +466,19 @@ function ProjectsPanel() {
             <div>
               <p className="font-bold">{p.title}</p>
               <p className="text-xs text-muted-foreground">
-                {categories?.find((c) => c.id === p.category_id)?.name ?? "Sem categoria"} ·{" "}
-                {p.published ? "Publicado" : "Rascunho"}
+                {categories?.find((c) => c.id === p.category_id)?.name ??
+                  "Sem categoria"}{" "}
+                · {p.published ? "Publicado" : "Rascunho"}
               </p>
             </div>
+
             <div className="ml-auto flex flex-wrap gap-2">
-              <GhostButton onClick={() => togglePublished(p.id, !p.published)}>
+              <GhostButton
+                onClick={() => togglePublished(p.id, !p.published)}
+              >
                 {p.published ? "Despublicar" : "Publicar"}
               </GhostButton>
+
               <Link
                 to="/editor/$id"
                 params={{ id: p.id }}
@@ -354,7 +486,10 @@ function ProjectsPanel() {
               >
                 Editar
               </Link>
-              <GhostButton onClick={() => remove(p.id)}>Excluir</GhostButton>
+
+              <GhostButton onClick={() => remove(p.id)}>
+                Excluir
+              </GhostButton>
             </div>
           </li>
         ))}
@@ -371,7 +506,6 @@ function LinksPanel() {
   const [url, setUrl] = useState("");
   const [email, setEmail] = useState("");
   const [whats, setWhats] = useState("");
-  const [avatarBusy, setAvatarBusy] = useState(false);
 
   useEffect(() => {
     if (settings) {
@@ -382,48 +516,57 @@ function LinksPanel() {
 
   async function saveContact() {
     if (!settings) return;
+
     const { error } = await supabase
       .from("portfolio_settings")
-      .update({ email, whatsapp: whats })
+      .update({
+        email,
+        whatsapp: whats,
+      })
       .eq("id", settings.id);
-    if (error) { toast.error(error.message); return; }
+
+    if (error) {
+      toast.error(error.message);
+      return;
+    }
+
     await qc.invalidateQueries({ queryKey: ["settings"] });
     toast.success("Contato atualizado.");
   }
 
-  async function uploadAvatar(file: File) {
-    if (!settings) return;
-    setAvatarBusy(true);
-    try {
-      const url2 = await uploadMedia(file, "avatar");
-      const { error } = await supabase
-        .from("portfolio_settings")
-        .update({ avatar_url: url2 })
-        .eq("id", settings.id);
-      if (error) throw error;
-      await qc.invalidateQueries({ queryKey: ["settings"] });
-      toast.success("Imagem atualizada.");
-    } catch (e) {
-      toast.error(e instanceof Error ? e.message : "Erro no upload.");
-    } finally {
-      setAvatarBusy(false);
-    }
-  }
-
   async function addLink() {
     if (!label.trim() || !url.trim()) return;
+
     const { error } = await supabase
       .from("social_links")
-      .insert({ label, url, sort_order: (links?.length ?? 0) + 1 });
-    if (error) { toast.error(error.message); return; }
+      .insert({
+        label,
+        url,
+        sort_order: (links?.length ?? 0) + 1,
+      });
+
+    if (error) {
+      toast.error(error.message);
+      return;
+    }
+
     setLabel("");
     setUrl("");
     await qc.invalidateQueries({ queryKey: ["social_links"] });
+    toast.success("Link adicionado.");
   }
 
   async function removeLink(id: string) {
-    const { error } = await supabase.from("social_links").delete().eq("id", id);
-    if (error) { toast.error(error.message); return; }
+    const { error } = await supabase
+      .from("social_links")
+      .delete()
+      .eq("id", id);
+
+    if (error) {
+      toast.error(error.message);
+      return;
+    }
+
     await qc.invalidateQueries({ queryKey: ["social_links"] });
   }
 
@@ -431,6 +574,7 @@ function LinksPanel() {
     <div className="space-y-6">
       <section className="ink-border hard-shadow space-y-4 rounded-xl bg-background p-6">
         <h2 className="text-2xl uppercase">Contato</h2>
+
         <div className="grid gap-4 sm:grid-cols-2">
           <Field label="E-mail">
             <input
@@ -440,7 +584,11 @@ function LinksPanel() {
               onChange={(e) => setEmail(e.target.value)}
             />
           </Field>
-          <Field label="WhatsApp" hint="Somente números, com DDI e DDD. Ex.: 5511999998888">
+
+          <Field
+            label="WhatsApp"
+            hint="Somente números, com DDI e DDD. Ex.: 5511999998888"
+          >
             <input
               className={inputClass}
               value={whats}
@@ -448,20 +596,15 @@ function LinksPanel() {
             />
           </Field>
         </div>
-        <Field label="Foto / imagem de perfil">
-          <input
-            type="file"
-            accept="image/*"
-            disabled={avatarBusy}
-            className="mt-1 block text-sm"
-            onChange={(e) => e.target.files?.[0] && uploadAvatar(e.target.files[0])}
-          />
-        </Field>
-        <PrimaryButton onClick={saveContact}>Salvar contato</PrimaryButton>
+
+        <PrimaryButton onClick={saveContact}>
+          Salvar contato
+        </PrimaryButton>
       </section>
 
       <section className="ink-border hard-shadow space-y-4 rounded-xl bg-background p-6">
         <h2 className="text-2xl uppercase">Links externos</h2>
+
         <div className="flex flex-wrap items-end gap-3">
           <Field label="Nome">
             <input
@@ -470,18 +613,33 @@ function LinksPanel() {
               onChange={(e) => setLabel(e.target.value)}
             />
           </Field>
+
           <Field label="URL">
-            <input className={inputClass} value={url} onChange={(e) => setUrl(e.target.value)} />
+            <input
+              className={inputClass}
+              value={url}
+              onChange={(e) => setUrl(e.target.value)}
+            />
           </Field>
+
           <PrimaryButton onClick={addLink}>Adicionar</PrimaryButton>
         </div>
+
         <ul className="space-y-2">
           {(links ?? []).map((l) => (
-            <li key={l.id} className="ink-border flex items-center gap-3 rounded-lg bg-card p-3">
+            <li
+              key={l.id}
+              className="ink-border flex items-center gap-3 rounded-lg bg-card p-3"
+            >
               <span className="font-bold">{l.label}</span>
-              <span className="truncate text-xs text-muted-foreground">{l.url}</span>
+              <span className="truncate text-xs text-muted-foreground">
+                {l.url}
+              </span>
+
               <span className="ml-auto">
-                <GhostButton onClick={() => removeLink(l.id)}>Excluir</GhostButton>
+                <GhostButton onClick={() => removeLink(l.id)}>
+                  Excluir
+                </GhostButton>
               </span>
             </li>
           ))}
