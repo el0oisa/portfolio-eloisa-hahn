@@ -6,7 +6,7 @@ import { useAuth } from "@/hooks/useAuth";
 import { useSiteConfig } from "@/hooks/useSiteConfig";
 
 export function SiteShell({ children }: { children: ReactNode }) {
-  const { settings, copy } = useSiteConfig();
+  const { settings, copy, mode, toggleMode } = useSiteConfig();
   const { data: links } = useQuery(linksQuery);
   const { isAdmin } = useAuth();
 
@@ -14,6 +14,7 @@ export function SiteShell({ children }: { children: ReactNode }) {
 
   return (
     <div className="grain min-h-screen bg-background text-foreground">
+      <div className="ds-bg-image" aria-hidden="true" />
       <a href="#conteudo" className="skip-link">
         {copy.skipLink}
       </a>
@@ -41,6 +42,17 @@ export function SiteShell({ children }: { children: ReactNode }) {
               <Link to="/" hash="contato" className="ds-interactive inline-block hover:text-primary">
                 {copy.navContact}
               </Link>
+            </li>
+            <li>
+              <button
+                type="button"
+                onClick={toggleMode}
+                aria-pressed={mode === "dark"}
+                aria-label={mode === "dark" ? "Ativar modo claro" : "Ativar modo escuro"}
+                className="ink-border ds-interactive rounded-full bg-card px-ds-sm py-ds-xs text-xs font-bold"
+              >
+                {mode === "dark" ? "☀︎ Claro" : "☾ Escuro"}
+              </button>
             </li>
             <li>
               {isAdmin ? (
