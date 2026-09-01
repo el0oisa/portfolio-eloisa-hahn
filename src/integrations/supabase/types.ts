@@ -53,6 +53,7 @@ export type Database = {
           biography: string
           border_preset: string
           copy_overrides: Json
+          design_config: Json
           created_at: string
           email: string
           grid_preset: string
@@ -81,6 +82,7 @@ export type Database = {
           biography?: string
           border_preset?: string
           copy_overrides?: Json
+          design_config?: Json
           created_at?: string
           email?: string
           grid_preset?: string
@@ -109,6 +111,7 @@ export type Database = {
           biography?: string
           border_preset?: string
           copy_overrides?: Json
+          design_config?: Json
           created_at?: string
           email?: string
           grid_preset?: string
