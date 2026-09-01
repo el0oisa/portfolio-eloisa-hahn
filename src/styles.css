@@ -218,12 +218,19 @@
   --color-sidebar-ring: var(--sidebar-ring);
 }
 
+/*
+ * Os valores por modo (claro/escuro) não são mais fixados aqui: o painel
+ * admin resolve o DesignConfig completo em JS (ver src/lib/design-system.ts)
+ * e escreve os --ds-* certos direto no <html>, alternando a classe .dark.
+ * Este bloco só existe para servir de fallback caso o JS ainda não tenha
+ * rodado (ex.: primeiro paint no servidor).
+ */
 .dark {
-  --ds-background: oklch(0.16 0.03 275);
-  --ds-surface: oklch(0.22 0.04 275);
-  --ds-text-primary: oklch(0.97 0.02 95);
-  --ds-text-secondary: oklch(0.75 0.03 275);
-  --ds-border: oklch(0.99 0 0 / 30%);
+  --ds-background: #141225;
+  --ds-surface: #1e1c33;
+  --ds-text-primary: #f6f4ec;
+  --ds-text-secondary: #bcb8d2;
+  --ds-border: rgba(255, 255, 255, 0.3);
 }
 
 @layer base {
@@ -257,9 +264,27 @@
   }
 
   :focus-visible {
-    outline: 3px solid var(--ds-focus);
+    outline: var(--ds-focus-width, 3px) solid var(--ds-focus-color, var(--ds-focus));
     outline-offset: 3px;
   }
+
+  a {
+    text-decoration: var(--ds-link-decoration, none);
+  }
+}
+
+/* Textura/imagem de fundo configurável, independente por modo (claro/escuro) */
+@utility ds-bg-image {
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+  background-image: var(--ds-bg-image, none);
+  background-size: var(--ds-bg-image-size, cover);
+  background-repeat: var(--ds-bg-image-repeat, no-repeat);
+  background-position: center;
+  opacity: var(--ds-bg-image-opacity, 0);
+  mix-blend-mode: var(--ds-bg-image-blend, normal);
 }
 
 /* ============================================ UTILITÁRIOS DO SISTEMA */
