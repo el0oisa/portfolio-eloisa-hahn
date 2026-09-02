@@ -54,20 +54,6 @@ export function SiteShell({ children }: { children: ReactNode }) {
                 {mode === "dark" ? "☀︎ Claro" : "☾ Escuro"}
               </button>
             </li>
-            <li>
-              {isAdmin ? (
-                <Link
-                  to="/admin"
-                  className="ink-border hard-shadow-sm ds-interactive inline-block rounded-md bg-secondary px-ds-sm py-ds-xs font-bold text-secondary-foreground"
-                >
-                  {copy.navAdmin}
-                </Link>
-              ) : (
-                <Link to="/auth" className="ds-interactive inline-block text-muted-foreground hover:text-primary">
-                  {copy.navLogin}
-                </Link>
-              )}
-            </li>
           </ul>
         </nav>
       </header>
@@ -77,7 +63,7 @@ export function SiteShell({ children }: { children: ReactNode }) {
       <footer className="mt-ds-3xl border-t-[length:var(--ds-border-width)] border-foreground bg-foreground py-ds-xl text-background">
         <div className="ds-container flex flex-col gap-ds-md sm:flex-row sm:items-end sm:justify-between">
           <p className="font-display text-fluid-xl uppercase">{name}</p>
-          <ul className="flex flex-wrap gap-ds-md text-fluid-sm">
+          <ul className="flex flex-wrap items-center gap-ds-md text-fluid-sm">
             {(links ?? []).map((l) => (
               <li key={l.id}>
                 <a
@@ -90,6 +76,16 @@ export function SiteShell({ children }: { children: ReactNode }) {
                 </a>
               </li>
             ))}
+            {isAdmin ? (
+              <li>
+                <Link
+                  to="/admin"
+                  className="ink-border hard-shadow-sm ds-interactive inline-block rounded-md bg-secondary px-ds-sm py-ds-xs font-bold text-secondary-foreground"
+                >
+                  {copy.navAdmin}
+                </Link>
+              </li>
+            ) : null}
           </ul>
         </div>
       </footer>
